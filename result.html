@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <title>覲見舊日2統計表</title>
+  <style>
+    html, body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: sans-serif;
+      color: white;
+      background: url('kamibg.png') no-repeat center bottom;
+      background-size: cover;
+      background-attachment: fixed;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    /* 暗化遮罩 */
+    body::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: rgba(0, 0, 0, 0.6);
+      z-index: 0;
+    }
+
+    .content {
+      position: relative;
+      z-index: 1;
+      text-align: center;
+      width: 100%;
+    }
+
+    .title {
+      font-size: 2.5em;
+      margin-bottom: 0.5em;
+    }
+
+    .scores {
+      display: flex;
+      justify-content: space-evenly;
+      align-items: center;
+      padding: 1em 2em;
+    }
+
+    .score {
+      font-size: 5em;
+      animation: flicker 1.5s infinite alternate;
+      text-shadow: 0 0 10px orange, 0 0 20px red, 0 0 30px yellow;
+      width: 40%;
+    }
+
+    @keyframes flicker {
+      from { opacity: 1; text-shadow: 0 0 10px orange; }
+      to   { opacity: 0.7; text-shadow: 0 0 30px red; }
+    }
+
+    .time {
+      font-size: 1.5em;
+      margin-top: 1em;
+      color: #ffcc99;
+    }
+
+    @media screen and (max-width: 768px) {
+      body {
+        background: url('kamibg.png') no-repeat center center;
+        background-size: contain;
+      }
+      .scores {
+        flex-direction: column;
+      }
+      .score {
+        width: 100%;
+        font-size: 3.5em;
+        margin: 0.2em 0;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="content">
+    <div class="title">覲見舊日2統計表</div>
+
+    <div class="scores">
+      <div id="leftScore" class="score">0</div>
+      <div id="rightScore" class="score">0</div>
+    </div>
+
+    <div class="time" id="timeDisplay">--:--:--</div>
+  </div>
+
+  <!-- Firebase -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getFirestore, collection, getDocs } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBNqcks1Aoo1dPqjpKoi7WK0a_36fV6-nE",
+      authDomain: "vote-tracker-84ec8.firebaseapp.com",
+      projectId: "vote-tracker-84ec8",
+      storageBucket: "vote-tracker-84ec8.firebasestorage.app",
+      messagingSenderId: "716803463203",
+      appId: "1:716803463203:web:83c1e395e1d329b9bcf996"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    async function loadVotes() {
+      const querySnapshot = await getDocs(collection(db, "votes"));
+      let abcTotal = 0;
+      let defTotal = 0;
+
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        abcTotal += data.abc || 0;
+        defTotal += data.def || 0;
+      });
+
+      const leftScore = (abcTotal / 10 / 1.1).toFixed(2);
+      const rightScore = (defTotal / 10).toFixed(2);
+
+      document.getElementById("leftScore").textContent = leftScore;
+      document.getElementById("rightScore").textContent = rightScore;
+    }
+
+    loadVotes();
+    setInterval(loadVotes, 30000);
+
+    function updateTime() {
+      const now = new Date();
+      const timeStr = now.toLocaleTimeString('zh-TW', { hour12: false });
+      document.getElementById('timeDisplay').textContent = timeStr;
+    }
+    setInterval(updateTime, 1000);
+    updateTime();
+  </script>
+</body>
+</html>

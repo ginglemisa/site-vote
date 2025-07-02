@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8">
+  <title>送出頁</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #111;
+      color: #fff;
+      padding: 2em;
+      text-align: center;
+    }
+    .block {
+      margin: 1em 0;
+      font-size: 1.2em;
+    }
+    button {
+      margin-top: 2em;
+      padding: 0.5em 2em;
+      font-size: 1.5em;
+      background: #ff6600;
+      color: #fff;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #cc5200;
+    }
+  </style>
+</head>
+<body>
+  <h1>請選擇項目並送出</h1>
+
+  <div class="block">
+    A：<label><input type="checkbox" value="5" class="abc"> +5</label>
+       <label><input type="checkbox" value="-5" class="abc"> -5</label>
+  </div>
+  <div class="block">
+    B：<label><input type="checkbox" value="3" class="abc"> +3</label>
+       <label><input type="checkbox" value="-3" class="abc"> -3</label>
+  </div>
+  <div class="block">
+    C：<label><input type="checkbox" value="2" class="abc"> +2</label>
+       <label><input type="checkbox" value="-2" class="abc"> -2</label>
+  </div>
+  <div class="block">
+    D：<label><input type="checkbox" value="5" class="def"> +5</label>
+       <label><input type="checkbox" value="-5" class="def"> -5</label>
+  </div>
+  <div class="block">
+    E：<label><input type="checkbox" value="3" class="def"> +3</label>
+       <label><input type="checkbox" value="-3" class="def"> -3</label>
+  </div>
+  <div class="block">
+    F：<label><input type="checkbox" value="2" class="def"> +2</label>
+       <label><input type="checkbox" value="-2" class="def"> -2</label>
+  </div>
+
+  <button onclick="submitForm()">送出</button>
+  <div id="msg" style="margin-top:1em; color: lightgreen; font-size: 1.2em;"></div>
+
+
+  <!-- Firebase CDN -->
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-app.js";
+    import { getFirestore, collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.12.0/firebase-firestore.js";
+
+    const firebaseConfig = {
+      apiKey: "AIzaSyBNqcks1Aoo1dPqjpKoi7WK0a_36fV6-nE",
+      authDomain: "vote-tracker-84ec8.firebaseapp.com",
+      projectId: "vote-tracker-84ec8",
+      storageBucket: "vote-tracker-84ec8.firebasestorage.app",
+      messagingSenderId: "716803463203",
+      appId: "1:716803463203:web:83c1e395e1d329b9bcf996"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const db = getFirestore(app);
+
+    window.submitForm = async function() {
+      const abcChecked = document.querySelectorAll('.abc:checked');
+      const defChecked = document.querySelectorAll('.def:checked');
+
+      let abcTotal = 0;
+      abcChecked.forEach(cb => abcTotal += parseInt(cb.value));
+      
+      let defTotal = 0;
+      defChecked.forEach(cb => defTotal += parseInt(cb.value));
+
+      try {
+        await addDoc(collection(db, "votes"), {
+          abc: abcTotal,
+          def: defTotal,
+          createdAt: serverTimestamp()
+        });
+        const msg = document.getElementById("msg");
+         msg.textContent = `✅ 已送出！ABC: ${abcTotal}，DEF: ${defTotal}`;
+          setTimeout(() => msg.textContent = "", 5000); // 5 秒後自動清除訊息
+        document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+      } catch (e) {
+        console.error("錯誤：", e);
+       msg.style.color = "salmon";
+msg.textContent = "❌ 發生錯誤，請再試一次";
+setTimeout(() => msg.textContent = "", 5000);
+msg.style.color = "lightgreen";
+      }
+    }
+  </script>
+</body>
+</html>
