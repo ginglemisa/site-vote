@@ -65,6 +65,35 @@
       to   { opacity: 0.7; text-shadow: 0 0 30px red; }
     }
 
+    .score-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 45%;
+}
+
+.label-top, .label-bottom {
+  font-size: 1.5em;
+  font-weight: bold;
+  letter-spacing: 2px;
+  text-shadow: 0 0 5px #ffd700, 0 0 10px #ffcc00;
+  color: #fff8dc;
+  margin: 0.5em 0;
+  animation: glow 2s ease-in-out infinite alternate;
+}
+
+@keyframes glow {
+  from {
+    text-shadow: 0 0 5px #ffd700;
+    transform: translateY(0px);
+  }
+  to {
+    text-shadow: 0 0 15px #ffa500;
+    transform: translateY(-2px);
+  }
+}
+
+
     .time {
       font-size: 1.5em;
       margin-top: 1em;
@@ -91,10 +120,16 @@
   <div class="content">
     <div class="title">覲見舊日2統計表</div>
 
-    <div class="scores">
-      <div id="leftScore" class="score">0</div>
-      <div id="rightScore" class="score">0</div>
-    </div>
+<div class="scores">
+  <div class="score-box">
+    <div class="label-top">調查員</div>
+    <div id="leftScore" class="score">0.00</div>
+  </div>
+  <div class="score-box">
+    <div id="rightScore" class="score">0.00</div>
+    <div class="label-bottom">邪教徒</div>
+  </div>
+</div>
 
     <div class="time" id="timeDisplay">--:--:--</div>
   </div>
