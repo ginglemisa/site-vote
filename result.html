@@ -7,129 +7,136 @@
     html, body {
       margin: 0;
       padding: 0;
-      height: 100%;
       font-family: sans-serif;
-      color: white;
       background: url('kamibg.png') no-repeat center bottom;
       background-size: cover;
       background-attachment: fixed;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      position: relative;
-      overflow: hidden;
+      color: white;
+      min-height: 100vh;
+      box-sizing: border-box;
     }
 
-    /* 暗化遮罩 */
     body::before {
       content: "";
-      position: absolute;
+      position: fixed;
       top: 0; left: 0; right: 0; bottom: 0;
       background: rgba(0, 0, 0, 0.6);
       z-index: 0;
     }
 
-    .content {
+    .container {
       position: relative;
       z-index: 1;
-      text-align: center;
-      width: 100%;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 2em 1em;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
     }
 
     .title {
       font-size: 2.5em;
-      margin-bottom: 0.5em;
+      font-weight: bold;
+      margin-bottom: 1em;
+      text-shadow: 0 0 5px #fff;
     }
 
-.scores {
-  display: flex;
-  justify-content: center;
-  gap: 8vw; /* 加入左右間距 */
-  width: 100%;
-  padding: 1em;
-  box-sizing: border-box;
-  flex-wrap: wrap;
-}
-
-.score {
-  flex: 0 1 300px;   /* 固定寬度範圍，避免變形 */
-  text-align: center;
-  font-size: 5em;
-  animation: flicker 1.5s infinite alternate;
-  text-shadow: 0 0 10px orange, 0 0 20px red, 0 0 30px yellow;
-}
-
-    @keyframes flicker {
-      from { opacity: 1; text-shadow: 0 0 10px orange; }
-      to   { opacity: 0.7; text-shadow: 0 0 30px red; }
+    .scores {
+      display: flex;
+      justify-content: center;
+      gap: 10vw;
+      flex-wrap: wrap;
+      width: 100%;
+      margin-bottom: 1em;
     }
 
     .score-box {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  width: 45%;
-}
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 40%;
+      min-width: 240px;
+    }
 
-.label-top, .label-bottom {
-  font-size: 1.5em;
-  font-weight: bold;
-  letter-spacing: 2px;
-  text-shadow: 0 0 5px #ffd700, 0 0 10px #ffcc00;
-  color: #fff8dc;
-  margin: 0.5em 0;
-  animation: glow 2s ease-in-out infinite alternate;
-}
+    .label-top, .label-bottom {
+      font-size: 1.5em;
+      font-weight: bold;
+      color: #fff8dc;
+      text-shadow: 0 0 5px #ffd700, 0 0 10px #ffa500;
+      animation: glow 2s ease-in-out infinite alternate;
+      margin-bottom: 0.3em;
+    }
 
-@keyframes glow {
-  from {
-    text-shadow: 0 0 5px #ffd700;
-    transform: translateY(0px);
-  }
-  to {
-    text-shadow: 0 0 15px #ffa500;
-    transform: translateY(-2px);
-  }
-}
+    .label-bottom {
+      margin-top: 0.3em;
+    }
 
+    @keyframes glow {
+      from {
+        text-shadow: 0 0 5px #ffd700;
+        transform: translateY(0px);
+      }
+      to {
+        text-shadow: 0 0 15px #ffa500;
+        transform: translateY(-2px);
+      }
+    }
+
+    .score {
+      font-size: 5em;
+      text-align: center;
+      animation: flicker 1.5s infinite alternate;
+      text-shadow: 0 0 10px orange, 0 0 20px red, 0 0 30px yellow;
+    }
+
+    @keyframes flicker {
+      from { opacity: 1; }
+      to { opacity: 0.7; }
+    }
 
     .time {
-      font-size: 1.5em;
-      margin-top: 1em;
+      margin-top: 2em;
+      font-size: 1.3em;
       color: #ffcc99;
+      text-shadow: 0 0 5px #ffcc99;
     }
 
     @media screen and (max-width: 768px) {
-      body {
-        background: url('kamibg.png') no-repeat center center;
-        background-size: contain;
-      }
       .scores {
         flex-direction: column;
+        align-items: center;
+        gap: 1.5em;
       }
+
       .score {
-        width: 100%;
         font-size: 3.5em;
-        margin: 0.2em 0;
+      }
+
+      .label-top, .label-bottom {
+        font-size: 1.2em;
+      }
+
+      .title {
+        font-size: 2em;
       }
     }
   </style>
 </head>
 <body>
-  <div class="content">
+  <div class="container">
     <div class="title">覲見舊日2統計表</div>
 
-<div class="scores">
-  <div class="score-box">
-    <div class="label-top">調查員</div>
-    <div id="leftScore" class="score">0.00</div>
-  </div>
-  <div class="score-box">
-    <div id="rightScore" class="score">0.00</div>
-    <div class="label-bottom">邪教徒</div>
-  </div>
-</div>
+    <div class="scores">
+      <div class="score-box">
+        <div class="label-top">調查員</div>
+        <div id="leftScore" class="score">0.00</div>
+      </div>
+      <div class="score-box">
+        <div id="rightScore" class="score">0.00</div>
+        <div class="label-bottom">邪教徒</div>
+      </div>
+    </div>
 
     <div class="time" id="timeDisplay">--:--:--</div>
   </div>
