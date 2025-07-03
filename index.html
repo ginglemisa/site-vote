@@ -96,7 +96,7 @@
           createdAt: serverTimestamp()
         });
         const msg = document.getElementById("msg");
-         msg.textContent = `✅ 已送出！ABC: ${abcTotal}，DEF: ${defTotal}`;
+         msg.textContent = `✅ 已送出！調查員 ${abcTotal}，邪教徒 ${defTotal}`;
           setTimeout(() => msg.textContent = "", 5000); // 5 秒後自動清除訊息
         document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
       } catch (e) {
