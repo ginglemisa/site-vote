@@ -180,10 +180,25 @@
     setInterval(loadVotes, 30000);
 
     function updateTime() {
-      const now = new Date();
-      const timeStr = now.toLocaleTimeString('zh-TW', { hour12: false });
-      document.getElementById('timeDisplay').textContent = timeStr;
-    }
+  const now = new Date();
+  const target = new Date("2025-08-10T13:00:00+08:00"); // 台灣時間
+
+  let diff = Math.floor((target - now) / 1000);
+  let prefix = "距離儀式還有 ";
+
+  if (diff < 0) {
+    diff = -diff;
+    prefix = "儀式已開始 ";
+  }
+
+  const days = Math.floor(diff / 86400);
+  const hours = Math.floor((diff % 86400) / 3600);
+  const minutes = Math.floor((diff % 3600) / 60);
+  const seconds = diff % 60;
+
+  const timeStr = `${prefix}${days} 天 ${hours} 時 ${minutes} 分 ${seconds} 秒`;
+  document.getElementById("timeDisplay").textContent = timeStr;
+}
     setInterval(updateTime, 1000);
     updateTime();
   </script>
